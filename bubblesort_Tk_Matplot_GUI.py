@@ -1,6 +1,9 @@
+from cProfile import label
 from tkinter import *
-import matplotlib.pyplot as plt
+from tkinter import ttk
 import numpy as np
+import matplotlib.pyplot as plt
+from time import perf_counter
     
 ##### IMPLEMENTACAO BASICA DO BUBBLE SORT #####
 def BubbleSort(lista):
@@ -41,6 +44,46 @@ def testBubble():
     print("Lista DEPOIS da ordenacao.",teste[x],"Elementos:")
     print(lista)
     print("============================================================")
+        
+##### UTILIZANDO NUMEROS ALEATORIOS NO BUBBLE SORT
+def ordenacaoAleatoria():
+    testes=np.array([500,1000,1500,2000,2500,4000,5500,7500])
+    #Tambem irei criar um array para armazenar o resultado em segundos de cada teste
+    resultados=np.array([0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0])
+    labels=np.array([])
+    aux=100
+
+    #Com esse for conseguiremos testar nosso BubbleSort com os valores de 1k ate 15k de elementos
+    for x in range (len(testes)):
+        #Primeiro iremos iniciar um vetor do tamanho da vez(indicado por testes[x])
+        lista = np.random.randint(2500,size=(testes[x]))
+
+        #Temporizador 
+        inicio = perf_counter()
+        BubbleSort(lista)
+        fim = perf_counter()
+
+        resultados[x]=fim-inicio
+        #O tempo sera armazenado em vetor na mesma posicao do teste que esta sendo feito
+        resultados[x]=round(resultados[x],3)
+        
+        #print("Para ",testes[x]," elementos foi gasto",resultados[x],"segundos")
+        
+        aux=aux+20
+        label=Label(janela,text=("Para ",testes[x]," elementos foi gasto",resultados[x],"segundos"))
+        label.place(x=60, y=aux)
+        janela.update
+
+    plotaGrafico(testes,resultados)
+
+#Plotando grafico com tkinter   
+def plotaGrafico(testes,resultados):
+  plt.title("Counting Sort")
+  plt.plot(testes,resultados, label="Nº de elementos/Tempo",marker='o')
+  plt.ylabel('Tempo(s)')
+  plt.xlabel('Nº de Elementos')
+  plt.legend()
+  plt.show()
     
 ##### FRONTEND - TKINTER #####
 
@@ -56,7 +99,10 @@ texto_inicial = Label(janela,text="Escolha o tipo de ordenacao que vc quer:")
 texto_inicial.place(x=75, y=35)
 
 botaoTest=Button(janela,text="Teste aqui",command=testBubble)
-botaoTest.place(x=150, y=65)
+botaoTest.place(x=100, y=65)
+
+botao1 = Button(janela,text="Numeros Aleatorios",command=ordenacaoAleatoria)
+botao1.place(x=230, y=65)
 
 janela.mainloop()
   
