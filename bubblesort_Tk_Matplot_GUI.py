@@ -27,7 +27,7 @@ def BubbleSort(lista):
     #Podemos otimizar o algoritmo diminuindo o numero de comparaçoes a cada iteracao do for
     tamanho=tamanho-1
     
-
+###### TESTE DO ALGORITMO ########
 def testBubble():
   #Testando funcionalidade do bubblesort
   teste = np.array([4,5,10,20])
@@ -44,9 +44,13 @@ def testBubble():
     print("Lista DEPOIS da ordenacao.",teste[x],"Elementos:")
     print(lista)
     print("============================================================")
+       
         
 ##### UTILIZANDO NUMEROS ALEATORIOS NO BUBBLE SORT
 def ordenacaoAleatoria():
+  
+    texto1="Numeros Aleatorios"
+    
     testes=np.array([500,1000,1500,2000,2500,4000,5500,7500])
     #Tambem irei criar um array para armazenar o resultado em segundos de cada teste
     resultados=np.array([0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0])
@@ -67,19 +71,52 @@ def ordenacaoAleatoria():
         #O tempo sera armazenado em vetor na mesma posicao do teste que esta sendo feito
         resultados[x]=round(resultados[x],3)
         
-        #print("Para ",testes[x]," elementos foi gasto",resultados[x],"segundos")
+        print("Para ",testes[x]," elementos foi gasto",resultados[x],"segundos")
         
         aux=aux+20
         label=Label(janela,text=("Para ",testes[x]," elementos foi gasto",resultados[x],"segundos"))
         label.place(x=60, y=aux)
         janela.update
 
-    plotaGrafico(testes,resultados)
+    plotaGrafico(testes,resultados,texto1)
+    
+########## PIOR CASO ##########
+def piorCaso():
+  
+  texto2="Pior Caso"
+      
+  #O código sera bem parecido
+  testes=np.array([500,1000,1500,2000,2500,4000,5500,7500])
+  resultados2=np.array([0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0])
+  labels=np.array([])
+  aux=100
 
-#Plotando grafico com tkinter   
-def plotaGrafico(testes,resultados):
+  for x in range (len(testes)):
+    #Só que aqui iremos gerar uma lista ordenada e depois invertela
+    lista = np.arange(testes[x])
+    listaInversa = lista[::-1]
+
+    
+    inicio = perf_counter()
+    BubbleSort(listaInversa)
+    fim = perf_counter()
+
+    resultados2[x]=fim-inicio
+    resultados2[x]=round(resultados2[x],2)
+
+    print("Para ",testes[x]," elementos foi gasto",resultados2[x],"segundos")  
+    aux=aux+20
+    label=Label(janela,text=("Para ",testes[x]," elementos foi gasto",resultados2[x],"segundos"))
+    label.place(x=60, y=aux)
+    janela.update  
+    
+  plotaGrafico(testes,resultados2,texto2)
+    
+  
+####### Plotando grafico com tkinter ########   
+def plotaGrafico(testes,resultados,texto):
   plt.title("Counting Sort")
-  plt.plot(testes,resultados, label="Nº de elementos/Tempo",marker='o')
+  plt.plot(testes,resultados, label=texto,marker='o')
   plt.ylabel('Tempo(s)')
   plt.xlabel('Nº de Elementos')
   plt.legend()
@@ -99,10 +136,13 @@ texto_inicial = Label(janela,text="Escolha o tipo de ordenacao que vc quer:")
 texto_inicial.place(x=75, y=35)
 
 botaoTest=Button(janela,text="Teste aqui",command=testBubble)
-botaoTest.place(x=100, y=65)
+botaoTest.place(x=300, y=3)
 
 botao1 = Button(janela,text="Numeros Aleatorios",command=ordenacaoAleatoria)
-botao1.place(x=230, y=65)
+botao1.place(x=50, y=65)
+
+botao2 = Button(janela,text="Pior Caso",command=piorCaso)
+botao2.place(x=250, y=65)
 
 janela.mainloop()
   
